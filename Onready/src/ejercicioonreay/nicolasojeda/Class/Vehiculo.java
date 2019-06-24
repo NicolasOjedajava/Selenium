@@ -1,5 +1,5 @@
 
-package ejercicioonreay.nicolaojeda.Class;
+package ejercicioonreay.nicolasojeda.Class;
 
 
 public abstract class Vehiculo {

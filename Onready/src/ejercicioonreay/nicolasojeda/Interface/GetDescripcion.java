@@ -1,5 +1,5 @@
 
-package ejercicioonreay.nicolaojeda.Interface;
+package ejercicioonreay.nicolasojeda.Interface;
 
 public interface GetDescripcion {
     

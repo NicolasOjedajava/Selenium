@@ -1,6 +1,6 @@
 
-package ejercicioonreay.nicolaojeda.Class;
-import ejercicioonreay.nicolaojeda.Interface.GetDescripcion;
+package ejercicioonreay.nicolasojeda.Class;
+import ejercicioonreay.nicolasojeda.Interface.GetDescripcion;
 
 public class Moto extends Vehiculo implements GetDescripcion{
 

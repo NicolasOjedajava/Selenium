@@ -1,8 +1,8 @@
 
-package ejercicioonreay.nicolaojeda.Main;
+package ejercicioonreay.nicolasojeda.Main;
 
-import ejercicioonreay.nicolaojeda.Class.Auto;
-import ejercicioonreay.nicolaojeda.Class.Moto;
+import ejercicioonreay.nicolasojeda.Class.Auto;
+import ejercicioonreay.nicolasojeda.Class.Moto;
 import java.util.ArrayList;
 
 
