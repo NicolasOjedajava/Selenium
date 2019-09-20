@@ -25,6 +25,14 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hamcrest.core.IsNull;
+import java.lang.String;
+import static java.lang.Thread.sleep;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+        
 
 
 public class XSSTest {
@@ -32,13 +40,16 @@ public class XSSTest {
     private WebDriver driver;
     private Map<String, Object> vars;
     JavascriptExecutor js;
+    private String pathDriver = "/home/deloitte/Descargas/geckodriver-v0.25.0-linux64/geckodriver";
     
     
     @Before
     public void setUp() {
         
-        System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
-        driver = new ChromeDriver();
+        DesiredCapabilities dc = new DesiredCapabilities();
+        dc.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
+        System.setProperty("webdriver.gecko.driver",pathDriver);
+        driver = new FirefoxDriver(dc);
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
         
@@ -61,17 +72,52 @@ public class XSSTest {
             
             driver.get("http://juice-shop-trainning.herokuapp.com/#/");
             driver.manage().window().setSize(new Dimension(1920, 1040));
-            driver.findElement(By.id("searchQuery")).clear();
-            driver.findElement(By.id("searchQuery")).sendKeys(texto);
-            driver.findElement(By.id("searchQuery")).click();
-          
+            
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(XSSTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            WebElement searchBox = driver.findElement(By.id("searchQuery"));
+            WebElement searchButton = driver.findElement(By.id("searchButton"));
+            
+            WebDriverWait waitSeachBox = new WebDriverWait(driver,2000);
+            waitSeachBox.until(ExpectedConditions.elementToBeClickable(searchBox));
+            
+            searchBox.clear();
+            
+            searchBox.sendKeys(texto);
+            
             try {
                 
-                driver.findElement(By.id("xxsframe"));
-                System.out.println("XXS INJECTION with payload: " + texto);
+                WebDriverWait waitButton = new WebDriverWait(driver,2000);
+                waitButton.until(ExpectedConditions.elementToBeClickable(searchButton));
+                
+                searchButton.click();
+                
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(XSSTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }   
+                
+            } catch (UnhandledAlertException f) {
+                
+                try {
+                        
+                    Alert alert = driver.switchTo().alert();
+                    String alertText = alert.getText();
 
-            } catch (Exception e) {
-                ///e.printStackTrace();
+                    if(!(alertText.equals("")) && !(alertText.equals(null))){
+                        System.out.println("XXS INJECTION with payload: " + texto);
+                    }
+
+                    
+                        
+                } catch (NoAlertPresentException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -81,7 +127,7 @@ public class XSSTest {
     public ArrayList cargarPayload() {
 
         //Cargar payload
-        String path = "C:\\XSS.txt"; //path txt payload.
+        String path = "/home/deloitte/XSS-Payload.txt"; //path txt payload.
         String linea;
         ArrayList <String> payloads = new ArrayList();
 
